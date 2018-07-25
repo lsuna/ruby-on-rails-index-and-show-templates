@@ -1,0 +1,175 @@
+  <%= render partial: 'shared/partials/hero' %>
+  <div class="container">
+    <!-- <div class="row"> <div class="col-md-12"> <h1 class="text-left"><%= @enhancement_project.title %></h1> </div> </div> -->
+
+    <div class="row">
+
+      <div class="col-md-6">
+
+        <small class="text-grey-9">
+          <a class="text-grey-9" href="/resources/enhancement_projects_list">Enhancement Projects</a>
+          /
+          <a class="text-grey-9" href="/resources/enhancement_projects_list"> Category</a>
+        </small>
+        <h1><%= @enhancement_project.title %></h1>
+        <table class="table table-condensed text-m">
+          <tbody>
+            <tr>
+              <td>
+                <i class="far fa-clock"></i>
+              </td>
+              <td><%= raw @enhancement_project.estimated_time %>
+                hour<% if @enhancement_project.estimated_time > "1" %>s<% end %>
+              </td>
+
+              <tr>
+                <td>
+                  <i class="fas fa-hands-helping"></i>
+                </td>
+                <td><%= raw @enhancement_project.volunteer_count %>
+                  volunteer<% if @enhancement_project.volunteer_count > "1" %>s<% end %>
+                </td>
+              </tr>
+              <tr>
+                <td>Difficulty</td>
+                <td>
+                  <%= raw @enhancement_project.enhancement_project_difficulty %>
+                </td>
+              </tr>
+            </tr>
+          </tbody>
+        </table>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          id="instructions-download"
+          class="btn btn-purple--inverted mb-30 visible-md-inline visible-lg-inline"
+          download="download"
+          onclick="ga('send','event', 'EnhancementProjects', '<%= @enhancement_project.pdf_1.name.delete(' ') %>', 'pdf-instructions-btn');"
+          href="<%= @enhancement_project.pdf_1.url %>">
+          <i class="far fa-file-pdf" aria-hidden="true"></i>
+          Download Instructions</a>
+      </div>
+      <div class="col-md-6 ">
+        <% if !@enhancement_project.image_1.nil? %>
+          <%= image_tag(@enhancement_project.image_1.url(:medium), alt: @enhancement_project.enhancement_project_type , class: "img-responsive mb-15") %>
+        <% end %>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          id="instructions-download"
+          class="btn btn-purple--inverted mb-30 visible-sm-inline visible-xs-inline"
+          download="download"
+          onclick="ga('send','event', 'EnhancementProjects', '<%= @enhancement_project.pdf_1.name.delete(' ') %>', 'pdf-instructions-btn');"
+          href="<%= @enhancement_project.pdf_1.url %>">
+          <i class="far fa-file-pdf" aria-hidden="true"></i>
+          Download Instructions</a>
+      </div>
+
+    </div>
+
+    <br>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <p> <%= raw @enhancement_project.body %> </p>
+         <%= render partial: 'shared/partials/share_buttons_icons', locals:{content: @enhancement_project} %>
+      </div>
+    </div>
+
+    <div class="mb-30"> </div>
+
+    <!-- Material List for Enhancement Projects -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <hr class="mb-30"/>
+        <h2 class="text-center">Materials & Tools</h2>
+      </div>
+
+        <% if !@enhancement_project.enhancement_project_materials.blank? %>
+        <div class="col-md-6 col-xs-12">
+          <%= raw @enhancement_project.enhancement_project_materials %>
+        </div>
+        <% end %>
+
+        <% if !@enhancement_project.enhancement_project_tools.blank? %>
+        <div class="col-md-6 col-xs-12">
+          <%= raw @enhancement_project.enhancement_project_tools %>
+        <% end %>
+        </div>
+    </div>
+
+
+
+
+    <!-- Preperation Instructions -->
+
+    <div class="row">
+      <% if !@enhancement_project.multiball_fields(:enhancement_project_prep_step).blank? %>
+        <div class="col-md-12 col-xs-12">
+          <hr class="mb-30"/>
+          <h2 class="text-center">Preparation instructions</h2>
+
+          <ol class="instructions">
+            <% @enhancement_project.multiball_fields(:enhancement_project_prep_step).each_with_index do |f, i| %>
+              <li>
+                <%= raw @enhancement_project.send(f) %>
+              </li>
+            <% end %>
+          </ol>
+        </div>
+      <% end %>
+    </div>
+
+
+
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <hr class="mb-30"/>
+        <h2 class="text-center">Build instructions</h2>
+        <ol class="instructions">
+          <% @enhancement_project.multiball_fields(:enhancement_project_build_step).each_with_index do |f, i| %>
+            <li>
+              <%= raw @enhancement_project.send(f) %>
+            </li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+        <hr class="mb-30"/>
+        <div class="gallery-related" data-block="related">
+          <h5 class="mb-30">
+            More enhancement projects
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-30" id="enhancement-project-<%= @enhancement_project.id %>" data-equal-height-class="enhancement-project-related">
+      <% @related.each do |content| %>
+        <div class="col-md-4 col-sm-6 col-xs-12 ">
+          <a href="<%= content_url(@container,content) %>">
+            <div class="gallery-item enhancement-project-related">
+              <% if !content.image_1.nil? %>
+                <%= image_tag(content.image_1.url(:square), class: "img-responsive img-index", alt: content.title) %>
+                <% elsif !content.image_2.nil? %>
+                  <%= image_tag(content.image_2.url(:square), class: "img-responsive img-index", alt: content.title) %>
+                <% end %>
+                <div class="gallery-description">
+                  <strong><%= content.title %></strong><br/>
+                  <span class="text-grey-three">
+                    <%= content.enhancement_project_type %><br/>
+                    Difficulty:
+                    <%= content.enhancement_project_difficulty %>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
