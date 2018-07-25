@@ -1,0 +1,67 @@
+<%= render partial: 'shared/partials/hero' %>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-6 col-sm-6 col-xs-4">
+        <h2>Projects</h2>
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-8">
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-ghost dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Project categories <i class="fas fa-chevron-down fa-fw" aria-hidden="true"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-category-sort">
+            <li><a href="/<%= @container.path %>">All Projects</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=landscaping">Landscaping</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=painting">Painting</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=play+elements">Play Elements</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=seating">Seating & Tables</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=shading">Shading</a></li>
+            <li><a href="/<%= @container.path %>_list?tag=other">Other Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="enhancement-projects-index-<%= @container.id %>" data-equal-height-class="enhancement-project-card">
+      <% @enhancement_projects.each do |enhancement_project| %>
+        <%= link_to content_url(@container,enhancement_project), :class => "index-card" do %>
+          <div class="col-md-4 col-sm-6 col-xs-12 mb-30 enhancement-project-card">
+            <% if !enhancement_project.image_1.nil? %>
+              <%= image_tag(enhancement_project.image_1.url(:medium), alt: enhancement_project.name , class: "img-responsive center-block mb-10") %>
+            <% end %>
+            <h4 class="mb-10"><%= content_link(@container, enhancement_project) %></h4>
+            <% if !enhancement_project.body.blank? %>
+              <small class="text-grey-9 display-block mb-10">
+                <%= raw enhancement_project.body %>
+              </small>
+            <% end %>
+
+            <div class="row text-m">
+              <% if enhancement_project.estimated_time.present? %>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <i class="far fa-clock"></i> <%= enhancement_project.estimated_time %>
+                </div>
+              <% end %>
+              <% if enhancement_project.volunteer_count.present? %>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <i class="far fa-people-carry"></i>
+                  <%= enhancement_project.volunteer_count %>
+                </div>
+              <% end %>
+              <% if enhancement_project.enhancement_project_difficulty.present? %>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                <span class="
+                  <% if enhancement_project.try(:enhancement_project_difficulty) == "Complex" %>text-orange<% end %> ">
+                  <%= enhancement_project.enhancement_project_difficulty %>
+                </span>
+              </div>
+              <% end %>
+            </div>
+
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
